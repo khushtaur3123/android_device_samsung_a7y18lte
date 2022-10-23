@@ -14,7 +14,14 @@
 # limitations under the License.
 #
 
-DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
+# TODO: Create
+# Inherit common device configuration
+$(call inherit-product, device/samsung/universal7885-common/universal7885-common.mk)
+
+# TODO : Dalvik Heap's Customization
+#Dalvik Heap's
+#$(call inherit-product, frameworks/native/build/phone-xhdpi-4096-dalvik-heap.mk)
+#$(call inherit-product, vendor/samsung/a7y18lte/a7y18lte-vendor.mk)
 
 # TODO: Define
 # Init
@@ -27,18 +34,17 @@ DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
 # System.prop
 TARGET_SYSTEM_PROP += device/samsung/a7y18lte/system.prop
 
-# TODO: Create
-# Inherit common device configuration
-$(call inherit-product, device/samsung/universal7885-common/universal7885-common.mk)
 
-$(call inherit-product, vendor/samsung/a7y18lte/a7y18lte-vendor.mk)
-
-# TODO: CHeck the need
+# TODO: Check the need\
 # Keymaster
 PRODUCT_PACKAGES += \
     android.hardware.keymaster@3.0-service \
     android.hardware.keymaster@3.0-impl \
     libkeymaster3device
+
+# Boot animation
+TARGET_SCREEN_HEIGHT := 2220
+TARGET_SCREEN_WIDTH := 1080
 
 # TODO: Check and revise
 # Rootdir
