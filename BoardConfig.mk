@@ -1,34 +1,29 @@
-DEVICE_PATH := device/samsung/m20lte
+#
+# Copyright (C) 2018 The LineageOS Project
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
 
-# Board
-TARGET_BOARD_INFO_FILE := $(DEVICE_PATH)/board-info.txt
+DEVICE_PATH := device/samsung/a7y18lte
 
-# Init
-TARGET_INIT_VENDOR_LIB := //$(DEVICE_PATH):libinit_a7y18lte
+# Assert
+TARGET_OTA_ASSERT_DEVICE := a7y18lte,a7y18ltejt
 
-# TODO:check this
 # Kernel
-BOARD_KERNEL_SEPARATED_DT := true
-TARGET_KERNEL_CONFIG := a7y18lte_defconfig
-BOARD_CUSTOM_BOOTIMG_MK := hardware/samsung/mkbootimg.mk
-TARGET_CUSTOM_DTBTOOL := dtbhtoolExynos
+TARGET_KERNEL_CONFIG := exynos7885-a7y18lte_defconfig
 
-# TODO:check Recovery size
 # Partitions
-BOARD_SYSTEMIMAGE_PARTITION_SIZE := 4093640704
-BOARD_RECOVERYIMAGE_PARTITION_SIZE := 39845888
+BOARD_SYSTEMIMAGE_PARTITION_SIZE   := 4561305600
 
-# TODO:complete fstab
-# Recovery
-TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/rootdir/etc/fstab.exynos7885
-
-#TODO:check this
-# Sepolicy
-BOARD_SEPOLICY_TEE_FLAVOR := mobicore
-
-# SPL
-VENDOR_SECURITY_PATCH := 2022-07-01
-
-# TODO:Build this
 # Inherit common board flags
 include device/samsung/universal7885-common/BoardConfigCommon.mk
