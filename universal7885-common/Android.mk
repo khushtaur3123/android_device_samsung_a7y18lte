@@ -11,8 +11,8 @@ LIBGLES_MALI_LIBRARY := /vendor/lib/egl/libGLES_mali.so
 LIBGLES_MALI64_LIBRARY := /vendor/lib64/egl/libGLES_mali.so
 
 #TODO:Change these loops
-ifeq ($(TARGET_DEVICE), $(filter $(TARGET_DEVICE),a10dd a10 a20 a20e))
-VULKAN_SYMLINK := $(TARGET_OUT_VENDOR)/lib/hw/vulkan.universal7884B.so
+ifeq ($(TARGET_DEVICE), $(filter $(TARGET_DEVICE),a7y18lte a7y18ltejt))
+VULKAN_SYMLINK := $(TARGET_OUT_VENDOR)/lib/hw/vulkan.universal7885.so
 $(VULKAN_SYMLINK): $(LOCAL_INSTALLED_MODULE)
 	@echo "Creating lib/hw/vulkan.universal7885.so symlink: $@"
 	@mkdir -p $(dir $@)
@@ -21,10 +21,10 @@ $(VULKAN_SYMLINK): $(LOCAL_INSTALLED_MODULE)
 ALL_DEFAULT_INSTALLED_MODULES += $(VULKAN_SYMLINK)
 endif
 
-ifeq ($(TARGET_DEVICE), $(filter $(TARGET_DEVICE),a10 a20 a20e))
-VULKAN64_SYMLINK := $(TARGET_OUT_VENDOR)/lib64/hw/vulkan.universal7884B.so
+ifeq ($(TARGET_DEVICE), $(filter $(TARGET_DEVICE),a7y18lte a7y18ltejt))
+VULKAN64_SYMLINK := $(TARGET_OUT_VENDOR)/lib64/hw/vulkan.universal7885.so
 $(VULKAN64_SYMLINK): $(LOCAL_INSTALLED_MODULE)
-	@echo "Creating lib64/hw/vulkan.universal7884B.so symlink: $@"
+	@echo "Creating lib64/hw/vulkan.universal7885.so symlink: $@"
 	@mkdir -p $(dir $@)
 	$(hide) ln -sf $(LIBGLES_MALI64_LIBRARY) $@
 
