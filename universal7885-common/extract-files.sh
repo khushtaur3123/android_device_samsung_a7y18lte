@@ -22,12 +22,20 @@ source "${HELPER}"
 
 function blob_fixup {
 	case "$1" in
+	vendor/lib*/libhifills.so)
+		grep -q libunwindstack.so "$2" || "$PATCHELF" --add-needed "libunwindstack.so" "$2"
+		;;
+	vendor/lib*/hw/camera.exynos7904.so)
+		"$PATCHELF" --replace-needed "libcamera_client.so" "libcamera_metadata_helper.so" "$2"
+		"$PATCHELF" --replace-needed "libgui.so" "libgui_vendor.so" "$2"
+		;;
+	vendor/lib*/libexynoscamera.so | vendor/lib*/libexynoscamera3.so)
+		"$PATCHELF" --remove-needed "libcamera_client.so" "$2"
+		"$PATCHELF" --remove-needed "libgui.so" "$2"
+		;;
 	vendor/lib*/libsensorlistener.so)
 		grep -q libshim_sensorndkbridge.so "$2" || "$PATCHELF" --add-needed "libshim_sensorndkbridge.so" "$2"
 		;;
-        vendor/lib*/libexynosdisplay.so)
-            "${PATCHELF}" --replace-needed "libutils.so" "libutils-v32.so" "${2}"
-            ;;
 	esac
 }
 

@@ -9,8 +9,8 @@
 set -e
 
 # Required!
-export DEVICE=a20
-export DEVICE_COMMON=universal7885-common
+export DEVICE=m20lte
+export DEVICE_COMMON=universal7904-common
 export VENDOR=samsung
 
 "./../../${VENDOR}/${DEVICE_COMMON}/setup-makefiles.sh" "$@"

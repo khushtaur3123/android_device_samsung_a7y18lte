@@ -8,36 +8,17 @@ on early-init
 on init
     start watchdogd
 
-    write /proc/sys/vm/swappiness 160
+    # Fastcharge
+    chown system radio /sys/class/sec/switch/afc_disable
 
-    # ZRAM setup
-    write /sys/block/zram0/comp_algorithm zstd
-    write /sys/block/zram0/max_comp_streams 8
+    # ZRAM parameters
     write /proc/sys/vm/page-cluster 0
+    write /proc/sys/vm/swappiness 130
 
     ## SCSC WLAN
     # SD-755: Increase default socket rx buffer limit
     write /proc/sys/net/core/rmem_default 327680
     write /proc/sys/net/core/rmem_max 327680
-    
-# For CPUSET(7885)   0-3, 4-5, 6-7
-    chown system system /dev/cpuset/top-app/cpus
-    chown system system /dev/cpuset/foreground/cpus
-    chown system system /dev/cpuset/background/cpus
-    chown system system /dev/cpuset/system-background/cpus
-    chmod 664 /dev/cpuset/top-app/cpus
-    chmod 664 /dev/cpuset/foreground/cpus
-    chmod 664 /dev/cpuset/background/cpus
-    chmod 664 /dev/cpuset/system-background/cpus
-    write /dev/cpuset/top-app/cpus 0-7
-    write /dev/cpuset/foreground/cpus 0-7
-    write /dev/cpuset/background/cpus 0-7
-    write /dev/cpuset/system-background/cpus 0-7
-
-# For Selective boost
-    write /dev/cpuset/top-app/selective_boost 1
-    write /dev/cpuset/foreground/selective_boost 1
-    write /dev/cpuset/cameraserver/selective_boost 1
 
 
     ## SCSC BT
@@ -59,7 +40,7 @@ on late-fs
 
 on post-fs
     # Allow writing to the kernel trace log.
-#    chmod 0222 /sys/kernel/debug/tracing/trace_marker
+    chmod 0222 /sys/kernel/debug/tracing/trace_marker
 
     # set RLIMIT_MEMLOCK to 64MB
     setrlimit 8 67108864 67108864
@@ -134,8 +115,8 @@ on post-fs-data
     chown audioserver system /sys/devices/platform/14a50000.abox/14a50000.abox:abox_debug@0/calliope_iva
 
 # FM Radio
-#    chown system audio /dev/radio0
-#    chmod 0660 /dev/radio0
+    chown system audio /dev/radio0
+    chmod 0660 /dev/radio0
 
 # Permissions for backlight
     chown system system /sys/class/backlight/panel/brightness
@@ -298,6 +279,10 @@ on boot
 	chown system system /dev/ttySAC2
 	chmod 0660 /dev/ttySAC2
 
+    # Set up kernel tracing, but disable it by default
+    chmod 0222 /sys/kernel/debug/tracing/trace_marker
+    write /sys/kernel/debug/tracing/tracing_on 0
+
     # DVFS & Hotplug
     chown system system /sys/power/cpuhotplug/enabled
     chown system system /sys/power/cpuhotplug/min_online_cpu
@@ -329,10 +314,10 @@ on boot
     chmod 0664 /sys/devices/system/sec_os_ctrl/migrate_os
 
     # mif dvfs node
-    chown system system /sys/devices/platform/17000010.devfreq_mif/devfreq/17000010.devfreq_mif/available_frequencies
-    chmod 0444 /sys/devices/platform/17000010.devfreq_mif/devfreq/17000010.devfreq_mif/available_frequencies
+    chown system system sys/devices/platform/17000010.devfreq_mif/devfreq/17000010.devfreq_mif/available_frequencies
+    chmod 0444 sys/devices/platform/17000010.devfreq_mif/devfreq/17000010.devfreq_mif/available_frequencies
     chown system system sys/devices/platform/17000010.devfreq_mif/devfreq/17000010.devfreq_mif/min_freq
-    chmod 0664 /sys/devices/platform/17000010.devfreq_mif/devfreq/17000010.devfreq_mif/min_freq
+    chmod 0664 sys/devices/platform/17000010.devfreq_mif/devfreq/17000010.devfreq_mif/min_freq
 
     # GPU dvfs node
     chown radio system /sys/devices/platform/11500000.mali/dvfs_table
@@ -360,14 +345,13 @@ on boot
     chown system system /sys/devices/system/cpu/cpu0/cpufreq/interactive/boost
     chmod 0660 /sys/devices/system/cpu/cpu0/cpufreq/interactive/boost
     chown system system /sys/devices/system/cpu/cpu0/cpufreq/interactive/boostpulse
-    chmod 0660 /sys/devices/system/cpu/cpu0/cpufreq/interactive/boostpulse
     chown system system /sys/devices/system/cpu/cpu0/cpufreq/interactive/input_boost
     chmod 0660 /sys/devices/system/cpu/cpu0/cpufreq/interactive/input_boost
     chown system system /sys/devices/system/cpu/cpu0/cpufreq/interactive/boostpulse_duration
     chmod 0660 /sys/devices/system/cpu/cpu0/cpufreq/interactive/boostpulse_duration
     chown system system /sys/devices/system/cpu/cpu0/cpufreq/interactive/io_is_busy
     chmod 0660 /sys/devices/system/cpu/cpu0/cpufreq/interactive/io_is_busy
-    
+
     chown system system /sys/devices/system/cpu/cpu6/cpufreq/interactive/timer_rate
     chmod 0660 /sys/devices/system/cpu/cpu6/cpufreq/interactive/timer_rate
     chown system system /sys/devices/system/cpu/cpu6/cpufreq/interactive/timer_slack
@@ -385,13 +369,41 @@ on boot
     chown system system /sys/devices/system/cpu/cpu6/cpufreq/interactive/boost
     chmod 0660 /sys/devices/system/cpu/cpu6/cpufreq/interactive/boost
     chown system system /sys/devices/system/cpu/cpu6/cpufreq/interactive/boostpulse
-    chmod 0660 /sys/devices/system/cpu/cpu6/cpufreq/interactive/boostpulse
     chown system system /sys/devices/system/cpu/cpu6/cpufreq/interactive/input_boost
     chmod 0660 /sys/devices/system/cpu/cpu6/cpufreq/interactive/input_boost
     chown system system /sys/devices/system/cpu/cpu6/cpufreq/interactive/boostpulse_duration
     chmod 0660 /sys/devices/system/cpu/cpu6/cpufreq/interactive/boostpulse_duration
     chown system system /sys/devices/system/cpu/cpu6/cpufreq/interactive/io_is_busy
     chmod 0660 /sys/devices/system/cpu/cpu6/cpufreq/interactive/io_is_busy
+
+# Mount cpuset group for cameraserver
+    mkdir /dev/cpuset/cameraserver
+    copy /dev/cpuset/cpus /dev/cpuset/cameraserver/cpus
+    copy /dev/cpuset/mems /dev/cpuset/cameraserver/mems
+    chown system system /dev/cpuset/cameraserver
+    chown system system /dev/cpuset/cameraserver/tasks
+    chown system system /dev/cpuset/cameraserver/cpus
+    chmod 0664 /dev/cpuset/cameraserver/tasks
+    chmod 0664 /dev/cpuset/cameraserver/cpus
+
+# For CPUSET(7885)   0-3, 4-5, 6-7
+    chown system system /dev/cpuset/top-app/cpus
+    chown system system /dev/cpuset/foreground/cpus
+    chown system system /dev/cpuset/background/cpus
+    chown system system /dev/cpuset/system-background/cpus
+    chmod 664 /dev/cpuset/top-app/cpus
+    chmod 664 /dev/cpuset/foreground/cpus
+    chmod 664 /dev/cpuset/background/cpus
+    chmod 664 /dev/cpuset/system-background/cpus
+    write /dev/cpuset/top-app/cpus 0-7
+    write /dev/cpuset/foreground/cpus 0-7
+    write /dev/cpuset/background/cpus 0-7
+    write /dev/cpuset/system-background/cpus 0-7
+
+# For Selective boost
+    write /dev/cpuset/top-app/selective_boost 1
+    write /dev/cpuset/foreground/selective_boost 1
+    write /dev/cpuset/cameraserver/selective_boost 1
 
 # Permission for UART SWITCH
     chmod 0660 /sys/class/sec/switch/uart_sel
@@ -404,7 +416,7 @@ on fs
     mount_all /vendor/etc/fstab.${ro.hardware} --early
     # We need to seperate mounting SEC_EFS partition from fstab file due to GSI image loading case
     wait /dev/block/platform/13500000.dwmmc0/by-name/sec_efs
-    mount ext4 /dev/block/platform/13500000.dwmmc0/by-name/sec_efs /factory nosuid nodev noatime noauto_da_alloc,discard,journal_checksum,data=ordered,errors=panic
+    mount ext4 /dev/block/platform/13500000.dwmmc0/by-name/sec_efs /efs nosuid nodev noatime noauto_da_alloc,discard,journal_checksum,data=ordered,errors=panic
 
     mount none /mnt/vendor/cpefs /cpefs bind
     restorecon_recursive /mnt/vendor/efs

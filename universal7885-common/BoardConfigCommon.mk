@@ -3,10 +3,9 @@ COMMON_PATH := device/samsung/universal7885-common
 BOARD_VENDOR := samsung
 
 # Platform
-TARGET_SOC := exynos7885
 TARGET_BOARD_PLATFORM := universal7885
+TARGET_SOC := exynos7885
 TARGET_BOOTLOADER_BOARD_NAME := universal7885
-
 TARGET_NO_BOOTLOADER := true
 TARGET_NO_RADIOIMAGE := true
 
@@ -14,99 +13,88 @@ TARGET_NO_RADIOIMAGE := true
 TARGET_ARCH := arm64
 TARGET_ARCH_VARIANT := armv8-a
 TARGET_CPU_ABI := arm64-v8a
-TARGET_CPU_VARIANT := cortex-a53
+TARGET_CPU_ABI2 :=
+TARGET_CPU_VARIANT := generic
+TARGET_CPU_VARIANT_RUNTIME := cortex-a53
+
 TARGET_2ND_ARCH := arm
 TARGET_2ND_ARCH_VARIANT := armv8-a
 TARGET_2ND_CPU_ABI := armeabi-v7a
 TARGET_2ND_CPU_ABI2 := armeabi
-TARGET_2ND_CPU_VARIANT := cortex-a53
+TARGET_2ND_CPU_VARIANT := generic
+TARGET_2ND_CPU_VARIANT_RUNTIME := cortex-a53
 
 # Bluetooth
+BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := $(COMMON_PATH)/bluetooth
 BOARD_HAVE_BLUETOOTH_SLSI := true
 
 # Build system
 BUILD_BROKEN_DUP_RULES := true
 BUILD_BROKEN_VINTF_PRODUCT_COPY_FILES := true
-BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
-BUILD_BROKEN_ENFORCE_SYSPROP_OWNER := true
 
 # Display
-TARGET_USES_VULKAN := true
+TARGET_SCREEN_DENSITY := 420
 
 # Filesystem
 TARGET_USERIMAGES_USE_EXT4 := true
 TARGET_USERIMAGES_USE_F2FS := true
 BOARD_CACHEIMAGE_FILE_SYSTEM_TYPE := ext4
 
-# Fingerprint 
-TARGET_SEC_FP_HAS_FINGERPRINT_GESTURES := true
-
-# Init
-TARGET_INIT_VENDOR_LIB := //$(COMMON_PATH):libinit_universal7885
+# Include
+TARGET_SPECIFIC_HEADER_PATH := $(COMMON_PATH)/include
 
 # Kernel
-TARGET_KERNEL_ARCH := arm64
 BOARD_KERNEL_IMAGE_NAME := Image
-TARGET_KERNEL_ADDITIONAL_FLAGS += LD=ld.lld AR=llvm-ar NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump STRIP=llvm-strip
 BOARD_KERNEL_BASE := 0x10000000
 BOARD_KERNEL_PAGESIZE := 2048
-BOARD_KERNEL_CMDLINE := androidboot.init_fatal_reboot_target=recovery
 BOARD_MKBOOTIMG_ARGS := --kernel_offset 0x00008000 --ramdisk_offset 0x01000000 --tags_offset 0x00000100
-TARGET_KERNEL_SOURCE := kernel/samsung/exynos7885
-KERNEL_SUPPORTS_LLVM_TOOLS := true
-TARGET_KERNEL_OPTIONAL_LD := true
-
-BOARD_USES_METADATA_PARTITION := true
-
-# Keymaster
-TARGET_KEYMASTER_VARIANT := samsung
+TARGET_KERNEL_SOURCE := kernel/samsung/universal7885
+TARGET_KERNEL_CLANG_COMPILE := true
+KERNEL_TOOLCHAIN_PATH := $(shell pwd)/prebuilts/clang/host/linux-x86/clang-eun/bin/aarch64-linux-gnu-
+TARGET_KERNEL_CLANG_VERSION := eun
 
 # HIDL
-include device/samsung/universal7885-common/configs/vintf/manifest.mk
+DEVICE_MANIFEST_FILE := $(COMMON_PATH)/manifest.xml
+DEVICE_MATRIX_FILE := $(COMMON_PATH)/compatibility_matrix.xml
+
+ODM_MANIFEST_SKUS += NFC
+ODM_MANIFEST_NFC_FILES := $(COMMON_PATH)/manifest_nfc.xml
+
+# LMKD stats logging
+TARGET_LMKD_STATS_LOG := true
 
 # Partitions
 BOARD_BOOTIMAGE_PARTITION_SIZE := 33554432
-TARGET_FS_TYPE ?= ext4
-BOARD_SYSTEMIMAGE_FILE_SYSTEM_TYPE := $(TARGET_FS_TYPE)
-BOARD_VENDORIMAGE_FILE_SYSTEM_TYPE := $(TARGET_FS_TYPE)
+BOARD_CACHEIMAGE_PARTITION_SIZE := 157286400
+BOARD_VENDORIMAGE_PARTITION_SIZE   := 452984832
+BOARD_VENDORIMAGE_FILE_SYSTEM_TYPE := ext4
 BOARD_FLASH_BLOCK_SIZE := 131072
 
 # Properties
 BOARD_PROPERTY_OVERRIDES_SPLIT_ENABLED := true
+TARGET_PRODUCT_PROP += $(COMMON_PATH)/product.prop
 TARGET_VENDOR_PROP += $(COMMON_PATH)/vendor.prop
-TARGET_SYSTEM_PROP += $(COMMON_PATH)/system.prop
-ifeq ($(TARGET_ARCH),arm64)
-TARGET_VENDOR_PROP += $(COMMON_PATH)/configs/vendor_64.prop
-else
-TARGET_VENDOR_PROP += $(COMMON_PATH)/configs/vendor_32.prop
-endif
 
 # Recovery
 BOARD_HAS_DOWNLOAD_MODE := true
-TARGET_RECOVERY_FSTAB := $(COMMON_PATH)/rootdir/etc/recovery.fstab
 
 # Releasetools
-TARGET_RELEASETOOLS_EXTENSIONS := $(COMMON_PATH)/releasetools
+TARGET_RECOVERY_UPDATER_LIBS := librecovery_updater_universal7885
+TARGET_RELEASETOOLS_EXTENSIONS := $(COMMON_PATH)
 
 # RIL
 ENABLE_VENDOR_RIL_SERVICE := true
 
-BOARD_ROOT_EXTRA_FOLDERS := factory
-BOARD_ROOT_EXTRA_SYMLINKS := /factory:/efs
-
 # Sepolicy
-SYSTEM_EXT_PUBLIC_SEPOLICY_DIRS += \
-    $(COMMON_PATH)/sepolicy/public
+include device/lineage/sepolicy/exynos/sepolicy.mk
+include device/samsung_slsi/sepolicy/sepolicy.mk
+BOARD_VENDOR_SEPOLICY_DIRS += $(COMMON_PATH)/sepolicy/vendor
 
-BOARD_VENDOR_SEPOLICY_DIRS += \
-    $(COMMON_PATH)/sepolicy/vendor
-
-SYSTEM_EXT_PRIVATE_SEPOLICY_DIRS += \
-    $(COMMON_PATH)/sepolicy/private
-    
 # Vendor
 TARGET_COPY_OUT_VENDOR := vendor
-VENDOR_SECURITY_PATCH := 2021-11-05
+
+# VNDK
+BOARD_VNDK_VERSION := current
 
 # Wifi
 BOARD_WLAN_DEVICE                := slsi
@@ -115,10 +103,5 @@ BOARD_WPA_SUPPLICANT_DRIVER      := NL80211
 BOARD_WPA_SUPPLICANT_PRIVATE_LIB := lib_driver_cmd_$(BOARD_WLAN_DEVICE)
 BOARD_HOSTAPD_DRIVER             := NL80211
 BOARD_HOSTAPD_PRIVATE_LIB        := lib_driver_cmd_$(BOARD_WLAN_DEVICE)
-WIFI_HIDL_FEATURE_DUAL_INTERFACE := true
 WIFI_HIDL_UNIFIED_SUPPLICANT_SERVICE_RC_ENTRY := true
-
-# wpa_supplicant feature flags
-CONFIG_ACS := true
-CONFIG_IEEE80211AC := true
-
+PRODUCT_CFI_INCLUDE_PATHS += hardware/samsung_slsi/scsc_wifibt/wpa_supplicant_lib

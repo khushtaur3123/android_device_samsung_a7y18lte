@@ -1,29 +1,25 @@
 DEVICE_PACKAGE_OVERLAYS += $(LOCAL_PATH)/overlay
 
-TARGET_LOCAL_ARCH := arm64
-
 # Inherit common device configuration
 $(call inherit-product, device/samsung/universal7885-common/universal7885-common.mk)
 
 $(call inherit-product, vendor/samsung/a7y18lte/a7y18lte-vendor.mk)
 
-$(call inherit-product, frameworks/native/build/phone-xxhdpi-4096-dalvik-heap.mk)
-
-# Derp
-DERP_BUILDTYPE := Official
-
-# USB
+# Keymaster
 PRODUCT_PACKAGES += \
-    android.hardware.usb-service.samsung
+    android.hardware.keymaster@3.0-service \
+    android.hardware.keymaster@3.0-impl \
+    libkeymaster3device
 
-TARGET_SCREEN_HEIGHT := 2280
-TARGET_SCREEN_WIDTH := 1080
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/android.hardware.keymaster@3.0-service.xml:$(TARGET_COPY_OUT_VENDOR)/etc/vintf/manifest/android.hardware.keymaster@3.0-service.xml
 
-# Fingerprint
-PRODUCT_COPY_FILES += frameworks/native/data/etc/android.hardware.fingerprint.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.fingerprint.xml
+# NFC
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/libnfc-sec-vendor.conf:$(TARGET_COPY_OUT_VENDOR)/etc/libnfc-sec-vendor.conf
 
+# Rootdir
 PRODUCT_PACKAGES += \
-   fstab.exynos7885
-   
-PRODUCT_PACKAGES += \
-   android.hardware.sensors@1.0-service
+	fstab.exynos7885 \
+	init.target.rc \
+	init.baseband.rc
