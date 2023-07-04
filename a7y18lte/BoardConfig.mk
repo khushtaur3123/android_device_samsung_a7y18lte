@@ -13,8 +13,17 @@ BOARD_CUSTOM_BOOTIMG_MK := hardware/samsung/mkbootimg.mk
 TARGET_CUSTOM_DTBTOOL := dtbhtoolExynos
 
 # Partitions
-BOARD_SYSTEMIMAGE_PARTITION_SIZE := 3565158400
+BOARD_SYSTEMIMAGE_PARTITION_SIZE := 4093640704
 BOARD_RECOVERYIMAGE_PARTITION_SIZE := 39845888
+
+#Filesystem
+#BOARD_PARTITIONS_PARTITION_LIST := \
+#        system \
+#        vendor \
+#        odm
+#		product (Not present seperatley, present inside system partition)
+BOARD_PRODUCTIMAGE_PARTITION_RESERVED_SIZE := 
+TARGET_COPY_OUT_ODM := odm
 
 # Recovery
 TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/rootdir/etc/fstab.exynos7885
