@@ -50,8 +50,8 @@ BOARD_KERNEL_PAGESIZE := 2048
 BOARD_MKBOOTIMG_ARGS := --kernel_offset 0x00008000 --ramdisk_offset 0x01000000 --tags_offset 0x00000100
 TARGET_KERNEL_SOURCE := kernel/samsung/universal7885
 TARGET_KERNEL_CLANG_COMPILE := true
-KERNEL_TOOLCHAIN_PATH := $(shell pwd)/prebuilts/clang/host/linux-x86/clang-eun/bin/aarch64-linux-gnu-
-TARGET_KERNEL_CLANG_VERSION := eun
+#KERNEL_TOOLCHAIN_PATH := $(shell pwd)/prebuilts/clang/host/linux-x86/clang-eun/bin/aarch64-linux-gnu-
+#TARGET_KERNEL_CLANG_VERSION := eun
 
 # HIDL
 DEVICE_MANIFEST_FILE := $(COMMON_PATH)/manifest.xml
