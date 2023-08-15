@@ -1,7 +1,7 @@
 # android_device_samsung_a7y18lte
 Device Tree for SM-A750F/DS INS
 
-## Device specifications (Galaxy A20/A20e)
+## Device specifications (Galaxy A7 2018) [Specifically SM-A750F/DS]
 | Feature                         | Specification                                                   |
 | :-------------------------------| :---------------------------------------------------------------|
 | Chipset                         | Samsung Exynos 7885 (14 nm)                                     |
