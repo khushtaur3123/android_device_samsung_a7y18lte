@@ -1,5 +1,12 @@
-# android_device_samsung_a7y18lte
-Device Tree for SM-A750F/DS INS
+# Android device tree for samsung SM-A750F (a7y18lte)
+
+```
+#
+# Copyright (C) 2023 The LineageOS Project
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+```
 
 ## Device specifications (Galaxy A7 2018) [Specifically SM-A750F/DS]
 | Feature                         | Specification                                                   |
