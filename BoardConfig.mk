@@ -6,6 +6,11 @@
 
 DEVICE_PATH := device/samsung/a7y18lte
 
+BUILD_BROKEN_DUP_RULES := true
+
+# Audio
+USE_XML_AUDIO_POLICY_CONF := 1
+
 # Architecture
 TARGET_ARCH := arm64
 TARGET_ARCH_VARIANT := armv8-a
@@ -21,23 +26,20 @@ TARGET_2ND_CPU_ABI2 := armeabi
 TARGET_2ND_CPU_VARIANT := generic
 TARGET_2ND_CPU_VARIANT_RUNTIME := cortex-a53
 
-ANDROID_MAJOR_VERSION := q
-
 # APEX
 OVERRIDE_TARGET_FLATTEN_APEX := true
-BUILD_BROKEN_DUP_RULES := true
 
 # Bootloader
 TARGET_BOOTLOADER_BOARD_NAME := exynos7885
 TARGET_NO_BOOTLOADER := true
+TARGET_NO_RADIOIMAGE := true
 
 # Display
 TARGET_SCREEN_DENSITY := 420
 
 # Kernel
-KERNEL_TOOLCHAIN_PATH := $(shell pwd)/prebuilts/gcc/host/linux-x86/gcc-linaro-4.9.4/bin/aarch64-linux-gnu-
-TARGET_KERNEL_GCC_COMPILE := true
-TARGET_KERNEL_GCC_VERSION := gcc-linaro-4.9.4
+TARGET_PREBUILT_DT := $(DEVICE_PATH)/prebuilts/dt.img
+TARGET_KERNEL_ARCH := arm64
 BOARD_KERNEL_BASE := 0x10000000
 BOARD_KERNEL_CMDLINE := androidboot.selinux=permissive androidboot.selinux=permissive
 BOARD_KERNEL_PAGESIZE := 2048
@@ -45,10 +47,22 @@ BOARD_RAMDISK_OFFSET := 0x01000000
 BOARD_KERNEL_TAGS_OFFSET := 0x00000100
 BOARD_MKBOOTIMG_ARGS += --ramdisk_offset $(BOARD_RAMDISK_OFFSET)
 BOARD_MKBOOTIMG_ARGS += --tags_offset $(BOARD_KERNEL_TAGS_OFFSET)
+BOARD_KERNEL_CMDLINE := androidboot.init_fatal_reboot_target=recovery
 BOARD_KERNEL_IMAGE_NAME := Image
+#TARGET_CUSTOM_DTBTOOL := dtbhtoolExynos
 BOARD_KERNEL_SEPARATED_DT := true
 TARGET_KERNEL_CONFIG := exynos7885-a7y18lte_defconfig
 TARGET_KERNEL_SOURCE := kernel/samsung/universal7885
+TARGET_KERNEL_ADDITIONAL_FLAGS += HOSTCFLAGS="-fuse-ld=lld -Wno-unused-command-line-argument"
+
+# Kernel - prebuilt
+#TARGET_FORCE_PREBUILT_KERNEL := true
+#ifeq ($(TARGET_FORCE_PREBUILT_KERNEL),true)
+#TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilts/kernel
+#TARGET_PREBUILT_DT := $(DEVICE_PATH)/prebuilts/dt.img
+#BOARD_MKBOOTIMG_ARGS += --dt $(TARGET_PREBUILT_DT)
+#BOARD_KERNEL_SEPARATED_DT := 
+#endif
 
 # Partitions
 BOARD_FLASH_BLOCK_SIZE := 131072 # (BOARD_KERNEL_PAGESIZE * 64)

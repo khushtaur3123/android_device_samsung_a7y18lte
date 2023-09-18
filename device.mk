@@ -24,10 +24,12 @@ PRODUCT_PACKAGES += \
 
 PRODUCT_PACKAGES += \
     fstab.exynos7885 \
-    init.samsung.rc \
+    init.rc \
     ueventd.rc \
-    init.samsung.rc\
-    init.usb_accessory.rc\
+
+# Audio
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/configs/audio_policy_configuration.xml:$(TARGET_COPY_OUT_PRODUCT)/vendor_overlay/29/etc/audio_policy_configuration.xml
 
 # Shipping API level
 PRODUCT_SHIPPING_API_LEVEL := 26
